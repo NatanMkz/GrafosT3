@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -90,6 +92,181 @@ namespace Graph
             if (Edges != edges) throw new Exception("O número de arestas informado no cabeçalho do arquivo difere da quantidade inserida.");
 
             return true;
+        }
+
+
+        public bool IsPlanar()
+        {
+            if (Nodes <= 2)
+            {
+                // V ≤ 2
+                return true;
+            }
+            else if (HasThreeCicle())
+            {
+                // A ≤ 3V – 6
+                return (Edges <= (3 * Nodes) - 6) && !this.HasK5() && !this.Hask33();
+            }
+
+            // A ≤ 2V – 4
+            return (Edges <= (2 * Nodes) - 4) && !this.HasK5() && !this.Hask33();
+        }
+
+        public bool HasK5()
+        {
+            if ((Nodes < 5) || (Edges < 10))
+            {
+                return false;
+            }
+
+            for (int v1 = 0; v1 < Nodes; v1++)
+            {
+                List<int> neighbors1 = this.GetNeighbors(v1);
+                if (neighbors1.Count < 4) continue;
+
+                foreach (var v2 in neighbors1)
+                {
+                    List<int> neighbors2 = this.GetNeighbors(v2);
+                    List<int> commmon_v1v2 = neighbors1.Intersect(neighbors2).ToList();
+
+                    if (
+                        (neighbors2.Count < 4) ||
+                        !neighbors2.Contains(v1) ||
+                        (commmon_v1v2.Count < 3)
+                    )
+                    {
+                        continue;
+                    }
+
+                    foreach (var v3 in commmon_v1v2)
+                    {
+                        List<int> neighbors3 = this.GetNeighbors(v3);
+                        List<int> commmon_v1v2v3 = commmon_v1v2.Intersect(neighbors3).ToList();
+
+                        if (
+                            (neighbors3.Count < 4) ||
+                            !neighbors3.Contains(v1) ||
+                            !neighbors3.Contains(v2) ||
+                            (commmon_v1v2v3.Count < 2)
+                        )
+                        {
+                            continue;
+                        }
+
+
+                        foreach (var v4 in commmon_v1v2v3)
+                        {
+                            List<int> neighbors4 = this.GetNeighbors(v4);
+                            List<int> commmon_v1v2v3v4 = commmon_v1v2v3.Intersect(neighbors4).ToList();
+
+                            if (
+                                (neighbors4.Count < 4) ||
+                                !neighbors4.Contains(v1) ||
+                                !neighbors4.Contains(v2) ||
+                                !neighbors4.Contains(v3) ||
+                                (commmon_v1v2v3v4.Count < 1)
+                            )
+                            {
+                                continue;
+                            }
+
+
+                            foreach (var v5 in commmon_v1v2v3v4)
+                            {
+                                List<int> neighbors5 = this.GetNeighbors(v5);
+
+                                if (
+                                    (neighbors5.Count >= 4) &&
+                                    neighbors5.Contains(v1) &&
+                                    neighbors5.Contains(v2) &&
+                                    neighbors5.Contains(v3) &&
+                                    neighbors5.Contains(v4)
+                                )
+                                {
+                                    return true;
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        public bool Hask33()
+        {
+
+            //public bool ValidarSubgrafoK3_3()
+            //{
+            //    for (int v1 = 0; v1 < numVertices; v1++)
+            //    {
+            //        for (int v2 = 0; v2 < numVertices; v2++)
+            //        {
+            //            if (v2 == v1 || matrizAdjacencia[v1, v2] == 0) continue;
+
+            //            for (int v3 = 0; v3 < numVertices; v3++)
+            //            {
+            //                if (v3 == v1 || v3 == v2 || matrizAdjacencia[v1, v3] == 0 || matrizAdjacencia[v2, v3] == 0) continue;
+
+            //                for (int v4 = 0; v4 < numVertices; v4++)
+            //                {
+            //                    if (v4 == v1 || v4 == v2 || v4 == v3 || matrizAdjacencia[v1, v4] == 0 || matrizAdjacencia[v2, v4] == 0 || matrizAdjacencia[v3, v4] == 0) continue;
+
+            //                    for (int v5 = 0; v5 < numVertices; v5++)
+            //                    {
+            //                        if (v5 == v1 || v5 == v2 || v5 == v3 || v5 == v4 || matrizAdjacencia[v4, v5] == 0) continue;
+
+            //                        for (int v6 = 0; v6 < numVertices; v6++)
+            //                        {
+            //                            if (v6 == v1 || v6 == v2 || v6 == v3 || v6 == v4 || v6 == v5 || matrizAdjacencia[v4, v6] == 0 || matrizAdjacencia[v5, v6] == 0) continue;
+
+            //                            if (matrizAdjacencia[v5, v6] == 1)
+            //                            {
+            //                                // Subgrafo K3,3 encontrado
+            //                                Console.WriteLine("Subgrafo K3,3 encontrado:");
+            //                                Console.WriteLine("Conjunto 1: {0}, {1}, {2}", v1, v2, v3);
+            //                                Console.WriteLine("Conjunto 2: {0}, {1}, {2}", v4, v5, v6);
+            //                                return true;
+            //                            }
+            //                        }
+            //                    }
+            //                }
+            //            }
+            //        }
+            //    }
+
+            //    // Nenhum subgrafo K3,3 encontrado
+            //    Console.WriteLine("Nenhum subgrafo K3,3 encontrado.");
+            //    return false;
+            //}
+
+            return false;
+        }
+
+        public bool HasThreeCicle()
+        {
+            for (int node = 0; node < Nodes; node++)
+            {
+                List<int> neighbors1 = this.GetNeighbors(node);
+
+                foreach (var neighbor1 in neighbors1)
+                {
+                    List<int> neighbors2 = this.GetNeighbors(neighbor1);
+
+
+                    foreach (var neighbor2 in neighbors2)
+                    {
+                        if (node == neighbor2) return true;
+                    }
+                }
+
+
+            }
+
+
+            return false;
         }
 
     }
