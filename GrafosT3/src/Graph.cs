@@ -70,26 +70,26 @@ namespace Graph
                     setted = true;
                     nodes = Convert.ToInt32(items[0]);
                     edges = Convert.ToInt32(items[1]);
-                    Directed = Convert.ToBoolean(Convert.ToInt32(items[2]));
-                    Weighted = Convert.ToBoolean(Convert.ToInt32(items[3]));
+                    //Directed = Convert.ToBoolean(Convert.ToInt32(items[2]));
+                    //Weighted = Convert.ToBoolean(Convert.ToInt32(items[3]));
 
                     continue;
                 }
 
                 string nodeFrom = Convert.ToString(items[0]);
                 string nodeTo = Convert.ToString(items[1]);
-                double weight = Weighted ? Convert.ToDouble("0" + items[2].Replace(".", ",")) : 0;
+                //double weight = Weighted ? Convert.ToDouble("0" + items[2].Replace(".", ",")) : 0;
 
                 if (this.NodeIndex(nodeFrom) == -1) this.NodeInsert(nodeFrom);
                 if (this.NodeIndex(nodeTo) == -1) this.NodeInsert(nodeTo);
 
-                this.EdgeInsert(this.NodeIndex(nodeFrom), this.NodeIndex(nodeTo), weight);
+                this.EdgeInsert(this.NodeIndex(nodeFrom), this.NodeIndex(nodeTo), 0 /*weight*/);
             }
             Nodes = NodeNames.Count;
             Edges = edges;
 
             //if (Nodes != nodes) throw new Exception("O número de vértices informado no cabeçalho do arquivo difere da quantidade inserida.");
-            if (Edges != edges) throw new Exception("O número de arestas informado no cabeçalho do arquivo difere da quantidade inserida.");
+            //if (Edges != edges) throw new Exception("O número de arestas informado no cabeçalho do arquivo difere da quantidade inserida.");
 
             return true;
         }
@@ -197,50 +197,41 @@ namespace Graph
 
         public bool Hask33()
         {
+            for (int v1 = 0; v1 < Nodes; v1++)
+            {
+                for (int v2 = 0; v2 < Nodes; v2++)
+                {
+                    if ((v1 == v2) || !this.EdgeExists(v1, v2)) continue;
 
-            //public bool ValidarSubgrafoK3_3()
-            //{
-            //    for (int v1 = 0; v1 < numVertices; v1++)
-            //    {
-            //        for (int v2 = 0; v2 < numVertices; v2++)
-            //        {
-            //            if (v2 == v1 || matrizAdjacencia[v1, v2] == 0) continue;
+                    for (int v3 = 0; v3 < Nodes; v3++)
+                    {
+                        if (v3 == v1 || v3 == v2 || !this.EdgeExists(v1, v3) || !this.EdgeExists(v2, v3)) continue;
 
-            //            for (int v3 = 0; v3 < numVertices; v3++)
-            //            {
-            //                if (v3 == v1 || v3 == v2 || matrizAdjacencia[v1, v3] == 0 || matrizAdjacencia[v2, v3] == 0) continue;
+                        for (int v4 = 0; v4 < Nodes; v4++)
+                        {
 
-            //                for (int v4 = 0; v4 < numVertices; v4++)
-            //                {
-            //                    if (v4 == v1 || v4 == v2 || v4 == v3 || matrizAdjacencia[v1, v4] == 0 || matrizAdjacencia[v2, v4] == 0 || matrizAdjacencia[v3, v4] == 0) continue;
+                            if (v4 == v1 || v4 == v2 || v4 == v3 || !this.EdgeExists(v1, v4) || !this.EdgeExists(v2, v4) || !this.EdgeExists(v3, v4)) continue;
 
-            //                    for (int v5 = 0; v5 < numVertices; v5++)
-            //                    {
-            //                        if (v5 == v1 || v5 == v2 || v5 == v3 || v5 == v4 || matrizAdjacencia[v4, v5] == 0) continue;
 
-            //                        for (int v6 = 0; v6 < numVertices; v6++)
-            //                        {
-            //                            if (v6 == v1 || v6 == v2 || v6 == v3 || v6 == v4 || v6 == v5 || matrizAdjacencia[v4, v6] == 0 || matrizAdjacencia[v5, v6] == 0) continue;
+                            for (int v5 = 0; v5 < Nodes; v5++)
+                            {
+                                if (v5 == v1 || v5 == v2 || v5 == v3 || v5 == v4 || !this.EdgeExists(v4, v5)) continue;
 
-            //                            if (matrizAdjacencia[v5, v6] == 1)
-            //                            {
-            //                                // Subgrafo K3,3 encontrado
-            //                                Console.WriteLine("Subgrafo K3,3 encontrado:");
-            //                                Console.WriteLine("Conjunto 1: {0}, {1}, {2}", v1, v2, v3);
-            //                                Console.WriteLine("Conjunto 2: {0}, {1}, {2}", v4, v5, v6);
-            //                                return true;
-            //                            }
-            //                        }
-            //                    }
-            //                }
-            //            }
-            //        }
-            //    }
+                                for (int v6 = 0; v6 < numVertices; v6++)
+                                {
+                                    if (v6 == v1 || v6 == v2 || v6 == v3 || v6 == v4 || v6 == v5 || !this.EdgeExists(v4, v6) || !this.EdgeExists(v5, v6)) continue;
 
-            //    // Nenhum subgrafo K3,3 encontrado
-            //    Console.WriteLine("Nenhum subgrafo K3,3 encontrado.");
-            //    return false;
-            //}
+                                    if (!this.EdgeExists(v5, v6))
+                                    {
+                                        return true;
+                                    }
+                                }
+
+                            }
+                        }
+                    }
+                }
+            }
 
             return false;
         }

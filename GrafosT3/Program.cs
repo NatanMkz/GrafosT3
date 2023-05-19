@@ -8,7 +8,7 @@ Console.WriteLine("\r");
 
 GraphList graphList = new(false, true);
 
-graphList.LoadFile(System.Environment.CurrentDirectory + "/files/graph.txt");
+graphList.LoadFile(System.Environment.CurrentDirectory + "/files/k5.txt");
 graphList.GraphPrint();
 
 if (graphList.HasK5())
