@@ -105,11 +105,11 @@ namespace Graph
             else if (HasThreeCicle())
             {
                 // A ≤ 3V – 6
-                return (Edges <= (3 * Nodes) - 6) && !this.HasK5() && !this.Hask33();
+                return (Edges <= (3 * Nodes) - 6) && !this.HasK5();
             }
 
             // A ≤ 2V – 4
-            return (Edges <= (2 * Nodes) - 4) && !this.HasK5() && !this.Hask33();
+            return (Edges <= (2 * Nodes) - 4) && !this.HasK5();
         }
 
         public bool HasK5()
@@ -184,47 +184,6 @@ namespace Graph
                                 )
                                 {
                                     return true;
-                                }
-
-                            }
-                        }
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        public bool Hask33()
-        {
-            for (int v1 = 0; v1 < Nodes; v1++)
-            {
-                for (int v2 = 0; v2 < Nodes; v2++)
-                {
-                    if ((v1 == v2) || !this.EdgeExists(v1, v2)) continue;
-
-                    for (int v3 = 0; v3 < Nodes; v3++)
-                    {
-                        if (v3 == v1 || v3 == v2 || !this.EdgeExists(v1, v3) || !this.EdgeExists(v2, v3)) continue;
-
-                        for (int v4 = 0; v4 < Nodes; v4++)
-                        {
-
-                            if (v4 == v1 || v4 == v2 || v4 == v3 || !this.EdgeExists(v1, v4) || !this.EdgeExists(v2, v4) || !this.EdgeExists(v3, v4)) continue;
-
-
-                            for (int v5 = 0; v5 < Nodes; v5++)
-                            {
-                                if (v5 == v1 || v5 == v2 || v5 == v3 || v5 == v4 || !this.EdgeExists(v4, v5)) continue;
-
-                                for (int v6 = 0; v6 < numVertices; v6++)
-                                {
-                                    if (v6 == v1 || v6 == v2 || v6 == v3 || v6 == v4 || v6 == v5 || !this.EdgeExists(v4, v6) || !this.EdgeExists(v5, v6)) continue;
-
-                                    if (!this.EdgeExists(v5, v6))
-                                    {
-                                        return true;
-                                    }
                                 }
 
                             }
