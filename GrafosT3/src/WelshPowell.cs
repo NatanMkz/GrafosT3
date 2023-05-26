@@ -6,82 +6,67 @@ using System.Threading.Tasks;
 
 namespace Graph
 {
-    public class WelshPowell: GraphList
+    public class WelshPowell : GraphList
     {
-        public List<int> used = new();
-        public int total = 0;
-
+        public List<int> colors = new();
+        public List<WelshNode> WelshNodes = new();
 
         public void WelshPowellColoring()
         {
-            int[] colors = new int[Nodes];
-            Array.Fill(colors, -1);
+            int color = 1;
 
-            // Ordena os vértices em ordem decrescente de grau
-            List<int> sortedVertices = new List<int>();
             for (int i = 0; i < Nodes; i++)
             {
-                sortedVertices.Add(i);
+                WelshNode node = new WelshNode(i, this.GetNeighbors(i).Count);
+                this.WelshNodes.Add(node);
             }
-            sortedVertices.Sort((v1, v2) => this.List[v2].Count.CompareTo(this.List[v1].Count));
 
-            int color = 1; // A tribui a cor 1 inicialmente
+            this.WelshNodes = this.WelshNodes.OrderByDescending(x => x.Degree).ToList();
 
-            // Percorre os vértices ordenados e atribui as cores
-            foreach (int vertex in sortedVertices)
+            while (this.WelshNodes.Where(x => x.Color == -1).ToList().Count > 0)
             {
-                if (colors[vertex] == -1)
+                this.colors.Add(color);
+
+                foreach (var uncoloredNode in this.WelshNodes.Where(x => x.Color == -1).ToList())
                 {
-                    // Atribui uma nova cor
-
-
-
-                    colors[vertex] = FindAvailableColor(colors, vertex);
-
-                    if(!this.used.Contains(colors[vertex]))
+                    // Se ele não tiver vizinhos que possuam essa cor, atribuir.
+                    if (this.IsColorAvailable(uncoloredNode.Index, color))
                     {
-                        this.used.Add(colors[vertex]);
-                        this.total++;
+                        uncoloredNode.Color = color;
                     }
 
-
-                    // Percorre os vértices não coloridos adjacentes e os marca com a cor atribuída
-                    foreach (Edge adjVertex in this.List[vertex])
-                    {
-                        if (colors[adjVertex.ToNode] == -1)
-                        {
-                            colors[adjVertex.ToNode] = colors[vertex];
-                        }
-                    }
-
-                    // Incrementa a cor para o próximo vértice
-                    color++;
                 }
-            }
 
-            // Imprime a cor atribuída a cada vértice
-            for (int i = 0; i < Nodes; i++)
-            {
-                Console.WriteLine("Vertex {0}: Color {1}", i, colors[i]);
+                color++;
             }
         }
 
-        private int FindAvailableColor(int[] colors, int vertex)
+        private bool IsColorAvailable(int index, int color)
         {
-            int availableColor = 1;
+            List<int> colorsUsed = new();
+            var neighbors = this.GetNeighbors(index);
 
-            // Verifica as cores atribuídas aos vértices adjacentes
-            foreach (Edge adjVertex in this.List[vertex])
+            foreach (var neighbor in neighbors)
             {
-                if (colors[adjVertex.ToNode] == availableColor)
-                {
-                    // Incrementa a cor disponível caso já esteja sendo usada por um vértice adjacente
-                    availableColor++;
-                }
+                colorsUsed.Add(this.WelshNodes.Single(x => x.Index == neighbor).Color);
             }
 
-            return availableColor;
+            return !colorsUsed.Contains(color);
         }
 
+    }
+
+    public class WelshNode
+    {
+        public WelshNode(int index, int degree)
+        {
+            this.Index = index;
+            this.Degree = degree;
+            this.Color = -1;
+        }
+
+        public int Index;
+        public int Degree;
+        public int Color;
     }
 }

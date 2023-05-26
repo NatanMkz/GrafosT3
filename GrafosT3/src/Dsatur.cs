@@ -43,10 +43,10 @@ namespace Graph
 
             this.DsaturNodes = this.DsaturNodes.OrderBy(x => x.Index).ToList();
 
-            foreach (var node in this.DsaturNodes)
-            {
-                Console.WriteLine("Vertex {0}: Color {1}", node.Index, node.Color);
-            }
+            //foreach (var node in this.DsaturNodes)
+            //{
+            //    Console.WriteLine("Vertex {0}: Color {1}", node.Index, node.Color);
+            //}
         }
 
         public int GetNextColor(int index)
@@ -54,13 +54,12 @@ namespace Graph
             List<int> colorsUsed = new();
             var neighbors = this.GetNeighbors(index);
 
-            foreach (var color in this.colors)
+
+            foreach (var neighbor in neighbors)
             {
-                foreach (var neighbor in neighbors)
-                {
-                    colorsUsed.Add(this.DsaturNodes.Single(x => x.Index == neighbor).Color);
-                }
+                colorsUsed.Add(this.DsaturNodes.Single(x => x.Index == neighbor).Color);
             }
+
 
             foreach (var color in this.colors)
             {
