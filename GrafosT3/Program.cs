@@ -4,44 +4,38 @@ using System.Diagnostics;
 Console.WriteLine("Meus Grafos");
 Console.WriteLine("\r");
 
-WelshPowell welshPowellList = new();
-welshPowellList.LoadFile(System.Environment.CurrentDirectory + "/files/r250-66-65.txt");
+//WelshPowell welshPowellList = new();
+//welshPowellList.LoadFile(System.Environment.CurrentDirectory + "/files/r250-66-65.txt");
 
-Stopwatch stopwatchWelsh = new Stopwatch();
+//Stopwatch stopwatchWelsh = new Stopwatch();
 
-// Iniciar o cronômetro
-stopwatchWelsh.Start();
+//// Iniciar o cronômetro
+//stopwatchWelsh.Start();
 
-welshPowellList.WelshPowellColoring();
+//welshPowellList.WelshPowellColoring();
 
-stopwatchWelsh.Stop();
+//stopwatchWelsh.Stop();
 
-long tempoDecorridoWelsh = stopwatchWelsh.ElapsedMilliseconds;
+//long tempoDecorridoWelsh = stopwatchWelsh.ElapsedMilliseconds;
 
-Console.WriteLine($"Tempo de execução WelshPowell: {tempoDecorridoWelsh} ms");
-Console.WriteLine("Cores WelshPowell: ");
-Console.WriteLine(welshPowellList.total);
+//Console.WriteLine($"Tempo de execução WelshPowell: {tempoDecorridoWelsh} ms");
+//Console.WriteLine("Cores WelshPowell: ");
+//Console.WriteLine(welshPowellList.total);
 
-DsaturGraph graphDsaturList = new();
-graphDsaturList.LoadFile(System.Environment.CurrentDirectory + "/files/r250-66-65.txt");
+Dsatur dsatur = new();
+//dsatur.LoadFile(Environment.CurrentDirectory + "/files/r250-66-65.txt");
+dsatur.LoadFile(Environment.CurrentDirectory + "/files/C4000-260-X.txt");
 
 Stopwatch stopwatchDsatur = new Stopwatch();
 
-// Iniciar o cronômetro
 stopwatchDsatur.Start();
-
-graphDsaturList.DSatur();
-
+dsatur.DsaturColoring();
 stopwatchDsatur.Stop();
 
 long tempoDecorridoDsatur = stopwatchDsatur.ElapsedMilliseconds;
 
 Console.WriteLine($"Tempo de execução Dsatur: {tempoDecorridoDsatur} ms");
-Console.WriteLine("Cores Dsatur: ");
-Console.WriteLine(graphDsaturList.colorsUsed.Count);
-
-//Console.WriteLine(graphDsaturList.colorsUsed.Count);
-
+Console.WriteLine($"Quantidade de cores usadas: {dsatur.colors.Count}");
 struct nodeInfo
 {
     public int sat;
@@ -49,8 +43,8 @@ struct nodeInfo
     public int vertex;
 }
 
- 
- 
+
+
 
 
 
